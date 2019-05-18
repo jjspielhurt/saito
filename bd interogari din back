@@ -1,0 +1,112 @@
+***Login
+int login(String id)
+{
+    "SELECT * from users where username like \"id\";//nu aveam parola la clienti
+    pentru fiecare linie
+    {
+        daca linia e nevoida setam un flag=1 pentru a marca succesul loginului
+    }
+    return flag (0 daca nu exista userul,1 altfel)
+}
+***Cautare carte in bd
+void search_books(String userInput)
+{
+    userInput=userInput.tolower() //sau ceva de genul
+    "SELECT id_book,title,author,isbn,publish_year,isbn,average_rating from books
+    where lower(title) like \"%userInput%\"
+    or lower(genre_id) like \"%userInput%\"
+    or lower(author) like \"%userInput%\"
+    or lower(publish_year) like \"%userInput%\"
+    or lower(isbn) like \"%userInput%\"
+    or cast(average_rating as text) like \"%userInput%\""
+
+}
+void update_searches(int user,int book)
+{
+    "INSERT INTO searches(user_id,searched_id) values(user,book)"
+}
+
+***Adaugare download in bd
+void update_downloads(int user_id,int book_id)
+{
+ "INSERT INTO downloads(user_id,book_id) values(user_id,book_id)";
+}
+***Adaugare ratinguri
+void update_ratings(int book_id,int rating,int user_id)
+{
+    "Insert into ratings(id_book,rating,id_user) values(book_id,rating,user_id)"
+}
+void update_average_rating(int book_id)
+{   rating=compute_average_rating(book_id);
+    "UPDATE books set average_rating=rating where id_book=book_id";
+}
+double compute_average_rating(int book_id)
+{   average=0;
+    cnt=0;
+    "Select rating from ratings where id_book=book_id"
+    {
+        //pentru fiecare linie 
+        average=average+cat e ratingul
+        cnt++;
+
+    }
+    return average/cnt;
+    //cred ca se poate calcula media si altfel in sql dar nu stiu cum exact
+}
+ 
+***Construieste ierarhia de genuri
+int genres_parents[NUM_GENRES];
+
+void genres_compute()
+{
+    "Select genre_id,parent_id from genres"
+    pentru fiecare linie din rezultat:
+    genres_parents[genre_id]=parent_id(genres_parents declarat global mai sus)
+}
+
+***Pentru algoritmu de clusterizare al userilor
+**Extragerea informatiilor despre useri
+se folosesc:
+o matrice X[NUM_USERS][NUM_GENRES] //contine un scor ce reprezinta interesul fiecarui user pentru un anumit gen de carti
+un vector max_features[NUM_GENRES] //CONTINE 
+genres_compute();//descrisa mai sus
+update_matrix(int user,int rating,int genre_id) //actualizeaza structurile de date de mai sus(matricea si vectorul)
+
+void features_ratings()
+{
+    "SELECT id_user,rating,genre_id from ratings join books where ratings.id_book=books.id_book"
+    pentru fiecare linie apeleaza update_matrix(id_user,rating,genre_id);
+}
+void geatures_searches()
+{
+    "SELECT user_id,genre_id from searches join books where searches.searched_id=books.id_book"
+    pentru fiecare linie apeleaza update_matrix(id_user,1,genre_id);
+}
+void features_downloads()
+{
+    "SELECT user_id,genre_id from downloads join books where downloads.book_id=books.id_book"
+     pentru fiecare linie apeleaza update_matrix(id_user,2.5,genre_id);
+}
+**trimiterea datelor despre o carte
+void send_info(int book_id)
+{
+    "select id_book,title,author,isbn,publish_year,isbn,average_rating from books where id_book=book_id"
+}
+**aflarea celor mai populare carti din fiecare cluster de useri pentru a le recomanda ulterior
+void book_score_ratings(user)
+{
+"SELECT id_user,rating,id_book from ratings where id_user=user"
+}
+void book_score_searches(user)
+{
+    SELECT user_id,searched_id from searches where user_id=user"
+}
+void book_score_downloads(user)
+{
+    "SELECT user_id,book_id from downloads where user_id="user_id"
+}
+void book_score_author(user);
+{
+    SELECT r.id_user,b.id_book from author a join books b on a.genre_id=b.genre_id join ratings r on r.id_book=b.id_book where (r.id_user=user);
+    
+}
