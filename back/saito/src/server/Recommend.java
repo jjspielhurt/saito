@@ -1,8 +1,11 @@
 package server;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.pow;
 
 public class Recommend {
+    public ArrayList<String> bookList=new ArrayList<String>();
     int maxCentroids=100;
     int numFeatures=100;
     int numGenres=100;

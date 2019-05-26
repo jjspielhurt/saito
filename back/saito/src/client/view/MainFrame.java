@@ -31,6 +31,8 @@ JPanel searchUpperPanel=new JPanel();
     JButton downloadBtn=new JButton("Download");
     JButton rateBtn=new JButton("Rate");
 
+    JFileChooser fileChooser = new JFileChooser();
+
     Client connection;
 
     public MainFrame(Client connection) {
@@ -64,6 +66,7 @@ JPanel searchUpperPanel=new JPanel();
         buttonPanel.add(downloadBtn);
         buttonPanel.add(rateBtn);
 
+
         add(searchPanel,BorderLayout.EAST);
         add(recommPanel,BorderLayout.WEST);
         add(buttonPanel,BorderLayout.SOUTH);
@@ -74,13 +77,43 @@ JPanel searchUpperPanel=new JPanel();
                 ArrayList<String> bookList=connection.search(searchQuery.getText());
 
                 bookList.forEach((book)->{
-                    searchList.append(book);
+                    searchList.append(book+"\n");
                 });
-                {
 
-                }
             }
         });
+        refreshBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<String> bookList=connection.recommend();
+
+                bookList.forEach((book)->{
+                    recomList.append(book+"\n");
+                });
+
+            }
+        });
+        downloadBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooseDownload();
+                connection.download("1");
+
+            }
+        });
+        rateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                connection.rate("1",4);
+
+
+            }
+        });
+    }
+    void chooseDownload()
+    {
+        fileChooser.showSaveDialog(null);
+        fileChooser.getSelectedFile().toString();
     }
 
 }

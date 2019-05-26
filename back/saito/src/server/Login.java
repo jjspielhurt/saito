@@ -1,8 +1,8 @@
 package server;
-
+//return user_id
 public class Login {
-    public boolean login(String username,String password)
+    public int login(String username,String password)
     {
-        return true;
+        return 1;
     }
 }

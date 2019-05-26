@@ -57,17 +57,25 @@ public class ServerThread extends Thread {
 
     }
 
-    public String recomm() {
+    public void recomm() {
         user.recommend();
-        return "A";
+        ArrayList<String> bookList=user.getBookList();
+        int numBooks=user.getNumRecommendations();
+        System.out.println("num_recom:"+numBooks);
+        out.println(numBooks);
+        out.flush();
+        bookList.forEach((book)->{
+            out.println(book);
+            out.flush();
+        });
     }
 
     public String download(String book) {
         return "a";
     }
 
-    public String rate(String book) {
-        return "a";
+    public boolean rate(int book,int rating) {
+        return user.userRate.rate(user.user_id,book,rating);
     }
 
 
@@ -157,7 +165,7 @@ public class ServerThread extends Thread {
                      **/
                     case "rate":
                         if (logged) {
-                            out.println(rate(arguments.get(0)));
+                            out.println(rate(Integer.parseInt(arguments.get(0)),Integer.parseInt(arguments.get(1))));
                             out.flush();
                         } else {
                             out.println("Log in first.");
@@ -171,8 +179,7 @@ public class ServerThread extends Thread {
                      **/
                     case "recomm":
                         if (logged) {
-                            out.println(recomm());
-                            out.flush();
+                            recomm();
                         } else {
                             out.println("Log in first.");
                             out.flush();
