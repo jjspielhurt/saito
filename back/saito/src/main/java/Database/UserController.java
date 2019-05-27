@@ -33,6 +33,22 @@ public class UserController {
             return false;
         }
     }
+    public int getUserId(String username){
+        String query="select user_id from users where username=\'"+username+"\'";
+
+        try {
+            PreparedStatement stm=Database.getConnection().prepareStatement(query);
+            stm.executeQuery();
+            ResultSet rst=stm.getResultSet();
+            rst.next();
+            return rst.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+
+    }
+
 
     public int getFolowers(int id){
         String query="select count (*) from followers user_id_followed=" +id;

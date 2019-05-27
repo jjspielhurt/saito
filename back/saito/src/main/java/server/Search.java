@@ -1,5 +1,7 @@
 package server;
 
+import Database.BookController;
+
 import java.util.ArrayList;
 
 public class Search {
@@ -12,10 +14,8 @@ public class Search {
     }
 
     public ArrayList<String> getBookList() {
-
-        bookList.add("hi book1");
-        bookList.add("hi book2");
-        numBooks=2;
+        BookController db=new BookController();
+        bookList=db.searchBooks(query);
         return bookList;
     }
 }

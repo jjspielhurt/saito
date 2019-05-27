@@ -11,6 +11,11 @@ public class Client {
     private static Socket socket = null;
     private static PrintWriter out;
     private static BufferedReader in;
+    private String username="Adi";
+
+    public String getUsername() {
+        return username;
+    }
 
     public Client() throws IOException {
         socket = new Socket(serverAddress, PORT);
@@ -23,6 +28,7 @@ public class Client {
         out.println(request);
         try {
             String response = in.readLine();
+            username=name;
             return response.equals("true");
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,7 +52,7 @@ public class Client {
     }
 
 
-    public String download(String book_id) {
+    public String download(String book_id,String path) {
         out.println("download " + book_id);
         try {
             String response = in.readLine();
@@ -113,6 +119,44 @@ public class Client {
         return bookList;
 
     }
+    public String getInfo(String book_name)
+    {
+        out.println("getinfo "+book_name);
+        try{
+            String info=in.readLine();
+            return info;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public String getFollowers()
+    {
+        out.println("getfollowers");
+        try{
+            String info=in.readLine();
+            return info;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public String getFollowing()
+    {
+        out.println("getfollowing");
+        try{
+            String info=in.readLine();
+            return info;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
 
 
 }

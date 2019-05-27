@@ -9,8 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class BookController {
-    public int getRating(int id){
-        String query="select average_rating from books where book_id=" + id;
+    public int getRating(String name) {
+        String query = "select average_rating from books where book_name=\'" + name + "\'";
 
         Statement stm = null;
         try {
@@ -25,7 +25,7 @@ public class BookController {
             e.printStackTrace();
         }
         try {
-            ResultSet rst= stm.getResultSet();
+            ResultSet rst = stm.getResultSet();
             rst.next();
             return rst.getInt("average_rating");
         } catch (SQLException e) {
@@ -34,28 +34,31 @@ public class BookController {
         return -1;
     }
 
-    public void add_rating(int rate,int id) {
-        double avr=getRating(id);
-        avr=avr+rate/2;
-        String query="update  books avarage_rating" +avr +  "where book_id=" + id;
+    public boolean add_rating(int rate, String name) {
+        double avr = getRating(name);
+        avr = avr + rate / 2;
+        String query = "update  books avarage_rating=" + avr + " where title=\'" + name + "\'";
         Statement stm = null;
         try {
             stm = Database.getConnection().createStatement();
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
+            e.printStackTrace();
+            return false;
+        }
         try {
             stm.executeQuery(query);
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
+        return false;
 
     }
 
-    ArrayList<String> searchBooks (String name){
-        String query="select title from books where title like %"+name+"%";
+    public ArrayList<String> searchBooks(String name) {
+        String query = "select title from books where title like %" + name + "%";
         ArrayList<String> list = new ArrayList<>();
         Statement stm = null;
         try {
@@ -67,11 +70,12 @@ public class BookController {
         try {
             stm.executeQuery(query);
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
         try {
-            ResultSet rst= stm.getResultSet();
-            while(rst.next()){
+            ResultSet rst = stm.getResultSet();
+            while (rst.next()) {
                 list.add(rst.getString("title"));
             }
         } catch (SQLException e) {
@@ -82,8 +86,8 @@ public class BookController {
 
     }
 
-    Book getInfo(String name){
-        String query="select * from books where name like %" +name +"%";
+    public Book getInfo(String name) {
+        String query = "select * from books where name like %" + name + "%";
 
         Statement stm = null;
         try {
@@ -98,9 +102,9 @@ public class BookController {
             e.printStackTrace();
         }
         try {
-            ResultSet rst= stm.getResultSet();
-            Book book = new Book(rst.getInt("book_id"),rst.getString("genre"),rst.getString("title"),rst.getInt("author_id"),rst.getInt("publish_year"),rst.getDouble("average_rating"));
-             return book;
+            ResultSet rst = stm.getResultSet();
+            Book book = new Book(rst.getInt("book_id"), rst.getString("genre"), rst.getString("title"), rst.getInt("author_id"), rst.getInt("publish_year"), rst.getDouble("average_rating"));
+            return book;
         } catch (SQLException e) {
             e.printStackTrace();
         }

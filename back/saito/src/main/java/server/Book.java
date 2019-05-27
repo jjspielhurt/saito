@@ -16,5 +16,6 @@ public class Book {
         this.title=title;
         this.year=year;
     }
+    public Book(){}
 
 }
