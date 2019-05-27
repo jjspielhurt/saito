@@ -1,9 +1,8 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import Database.BookController;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -41,6 +40,14 @@ public class ServerThread extends Thread {
         return false;
 
     }
+    public String getFollowers()
+    {
+        return user.getFollowers();
+    }
+    public String getFollowing()
+    {
+        return user.getFollowing();
+    }
 
     public void search(String query) {
         Search search=new Search(query);
@@ -70,9 +77,37 @@ public class ServerThread extends Thread {
         });
     }
 
-    public String download(String book) {
-        return "a";
+    public void download(String book) {
+        Download d=new Download(user.user_id,book);
+
+        String bookPath=d.getPath();
+        try {
+            FileReader fr=new FileReader(bookPath);
+            BufferedReader br=new BufferedReader(fr);
+            String bookContent="";
+            String line;
+            while((line=br.readLine())!=null)
+            {
+                bookContent+=line;
+            }
+            out.println(bookContent);
+            out.flush();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        out.println();
     }
+    public String getinfo(String book)
+    {
+        String response;
+        BookController db=new BookController();
+        return db.getInfo(book);
+    }
+
 
     public boolean rate(int book,int rating) {
         return user.userRate.rate(user.user_id,book,rating);
@@ -138,14 +173,42 @@ public class ServerThread extends Thread {
                     case "download":
                         if (logged) {
                             argument = request.split(" ", 2)[1];
-                            out.println(download(arguments.get(0)));
+                            download(arguments.get(0));
+                        } else {
+                            out.println("Log in first.");
+                            out.flush();
+                        }
+                        break;
+                    case "getinfo":
+                        if (logged) {
+                            out.println(getinfo(arguments.get(0).replaceAll("\"","")));
                             out.flush();
                         } else {
                             out.println("Log in first.");
                             out.flush();
                         }
                         break;
-                    /**
+
+                    case "getfollowers":
+                        if (logged) {
+                            out.println(getFollowers());
+                            out.flush();
+                        } else {
+                            out.println("Log in first.");
+                            out.flush();
+                        }
+                        break;
+
+                    case "getfollowing":
+                        if (logged) {
+                            out.println(getFollowing());
+                            out.flush();
+                        } else {
+                            out.println("Log in first.");
+                            out.flush();
+                        }
+                        break;
+                    /***
                      input:search query
                      output: num_books
                      books

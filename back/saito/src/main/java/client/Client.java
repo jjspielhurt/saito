@@ -121,7 +121,7 @@ public class Client {
     }
     public String getInfo(String book_name)
     {
-        out.println("getinfo "+book_name);
+        out.println("getinfo \""+book_name+"\"");
         try{
             String info=in.readLine();
             return info;

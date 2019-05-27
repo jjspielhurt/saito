@@ -86,8 +86,9 @@ public class BookController {
 
     }
 
-    public Book getInfo(String name) {
-        String query = "select * from books where name like %" + name + "%";
+    public  String getInfo(String name){
+        String info = "";
+        String query="select * from books where name like %" +name +"%";
 
         Statement stm = null;
         try {
@@ -102,9 +103,9 @@ public class BookController {
             e.printStackTrace();
         }
         try {
-            ResultSet rst = stm.getResultSet();
-            Book book = new Book(rst.getInt("book_id"), rst.getString("genre"), rst.getString("title"), rst.getInt("author_id"), rst.getInt("publish_year"), rst.getDouble("average_rating"));
-            return book;
+            ResultSet rst= stm.getResultSet();
+            info= "Title: "+rst.getString("title") + "\nAuthor: "+ rst.getInt("author_id")+ "\nYear: " +rst.getInt("publish_year")+ "\nGenre: "+rst.getString("genre")+"\nRating: " +rst.getDouble("average_rating");
+            return info;
         } catch (SQLException e) {
             e.printStackTrace();
         }

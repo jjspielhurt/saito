@@ -1,5 +1,7 @@
 package server;
 
+import Database.UserController;
+
 import java.util.ArrayList;
 
 public class User {
@@ -54,6 +56,17 @@ public class User {
             setUser_id(user);
             return true;
         }
+    }
+    public String getFollowers()
+    {
+        UserController db=new UserController();
+        return Integer.toString(db.getFolowers(user_id));
+    }
+    public String getFollowing()
+    {
+        UserController db=new UserController();
+        return Integer.toString(db.getFolowing(user_id));
+
     }
     public boolean register()
     {
